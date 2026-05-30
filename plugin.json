@@ -1,0 +1,30 @@
+{
+  "name": "siyuan-code-enhancer",
+  "author": "songyaocode",
+  "url": "https://github.com/songyaocode/siyuan-code-enhancer",
+  "version": "1.0.0",
+  "minAppVersion": "3.0.12",
+  "kernels": ["windows", "linux", "darwin", "docker", "android", "ios"],
+  "backends": ["windows", "linux", "darwin", "docker", "android", "ios"],
+  "frontends": ["desktop", "desktop-window", "mobile", "browser-desktop", "browser-mobile"],
+  "disabledInPublish": false,
+  "displayName": {
+    "default": "Code Enhancer",
+    "zh_CN": "代码增强"
+  },
+  "description": {
+    "default": "Beautiful code blocks with themes, titles, line highlighting, diff markers, folding and more for SiYuan Note",
+    "zh_CN": "让思源笔记的代码块更好看 — 主题切换、文件名标题、行高亮、Diff 标记、代码折叠等"
+  },
+  "readme": {
+    "default": "README.md",
+    "zh_CN": "README_zh_CN.md"
+  },
+  "funding": {
+    "openCollective": "",
+    "patreon": "",
+    "github": "",
+    "custom": []
+  },
+  "keywords": ["code", "highlight", "theme", "syntax", "代码", "高亮", "主题"]
+}

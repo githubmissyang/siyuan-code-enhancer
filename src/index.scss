@@ -1,0 +1,591 @@
+// ============================================================
+// Code Enhancer — Main Stylesheet
+// ============================================================
+// Beautiful code blocks for SiYuan Note
+// Features: Mac-style decoration, themes, line highlighting,
+// diff markers, folding, and more
+// ============================================================
+
+// --------------------------------------------------------
+// CSS Variables (base defaults, overridden by themes)
+// --------------------------------------------------------
+:root {
+    // These defaults match SiYuan's own styling
+    --ce-bg: inherit;
+    --ce-fg: inherit;
+    --ce-header-bg: rgba(0, 0, 0, 0.03);
+    --ce-header-fg: rgba(0, 0, 0, 0.5);
+    --ce-line-highlight: rgba(255, 213, 79, 0.15);
+    --ce-insert-bg: rgba(80, 200, 120, 0.15);
+    --ce-delete-bg: rgba(224, 108, 117, 0.15);
+    --ce-border-radius: 12px;
+    --ce-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --ce-font: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'SF Mono', Menlo, Monaco, Consolas, monospace;
+    --ce-font-size: 14px;
+    --ce-line-height: 1.6;
+    --ce-mac-close: #ff5f57;
+    --ce-mac-minimize: #febc2e;
+    --ce-mac-maximize: #28c840;
+    --ce-header-height: 36px;
+}
+
+// --------------------------------------------------------
+// Base Code Block Enhancement
+// --------------------------------------------------------
+.code-block[data-ce-decorated] {
+    position: relative;
+    border-radius: var(--ce-border-radius);
+    overflow: hidden;
+
+    // Apply theme background if set
+    &:not([class*="ce-theme-"]) {
+        // Keep SiYuan default
+    }
+
+    // Shadow variants
+    &[data-ce-shadow="light"] {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+    &[data-ce-shadow="medium"] {
+        box-shadow: var(--ce-shadow);
+    }
+    &[data-ce-shadow="strong"] {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    // When a theme is active, override background
+    &.ce-theme-one-dark,
+    &.ce-theme-dracula,
+    &.ce-theme-nord,
+    &.ce-theme-catppuccin-mocha,
+    &.ce-theme-tokyo-night,
+    &.ce-theme-gruvbox-dark,
+    &.ce-theme-monokai,
+    &.ce-theme-rose-pine,
+    &.ce-theme-solarized-dark,
+    &.ce-theme-github-dark {
+        background: var(--ce-bg) !important;
+        color: var(--ce-fg) !important;
+
+        .hljs {
+            background: transparent !important;
+            color: var(--ce-fg) !important;
+        }
+
+        // Override highlight.js token colors with theme colors
+        .hljs-keyword,
+        .hljs-selector-tag {
+            color: var(--ce-keyword) !important;
+        }
+        .hljs-string,
+        .hljs-addition {
+            color: var(--ce-string) !important;
+        }
+        .hljs-number,
+        .hljs-literal {
+            color: var(--ce-number) !important;
+        }
+        .hljs-comment,
+        .hljs-quote {
+            color: var(--ce-comment) !important;
+            font-style: italic;
+        }
+        .hljs-title,
+        .hljs-title.function_,
+        .hljs-section {
+            color: var(--ce-function) !important;
+        }
+        .hljs-variable,
+        .hljs-template-variable {
+            color: var(--ce-variable) !important;
+        }
+        .hljs-type,
+        .hljs-built_in {
+            color: var(--ce-type) !important;
+        }
+        .hljs-operator {
+            color: var(--ce-operator) !important;
+        }
+        .hljs-property,
+        .hljs-attr {
+            color: var(--ce-property) !important;
+        }
+        .hljs-tag {
+            color: var(--ce-tag) !important;
+        }
+        .hljs-attribute {
+            color: var(--ce-attr-name) !important;
+        }
+        .hljs-meta .hljs-keyword {
+            color: var(--ce-keyword) !important;
+        }
+    }
+
+    &.ce-theme-github-light,
+    &.ce-theme-solarized-light {
+        background: var(--ce-bg) !important;
+        color: var(--ce-fg) !important;
+
+        .hljs {
+            background: transparent !important;
+            color: var(--ce-fg) !important;
+        }
+
+        .hljs-keyword,
+        .hljs-selector-tag {
+            color: var(--ce-keyword) !important;
+        }
+        .hljs-string,
+        .hljs-addition {
+            color: var(--ce-string) !important;
+        }
+        .hljs-number,
+        .hljs-literal {
+            color: var(--ce-number) !important;
+        }
+        .hljs-comment,
+        .hljs-quote {
+            color: var(--ce-comment) !important;
+            font-style: italic;
+        }
+        .hljs-title,
+        .hljs-title.function_,
+        .hljs-section {
+            color: var(--ce-function) !important;
+        }
+    }
+}
+
+// --------------------------------------------------------
+// Window Decoration Header (Mac Style)
+// --------------------------------------------------------
+.ce-header {
+    display: flex;
+    align-items: center;
+    height: var(--ce-header-height);
+    padding: 0 12px;
+    background: var(--ce-header-bg);
+    border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+    user-select: none;
+    position: relative;
+    z-index: 1;
+
+    // Mac style buttons
+    .ce-header-buttons {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+
+        .ce-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            transition: filter 0.15s;
+
+            &:hover {
+                filter: brightness(1.2);
+            }
+        }
+
+        .ce-btn-close {
+            background: var(--ce-mac-close);
+        }
+        .ce-btn-minimize {
+            background: var(--ce-mac-minimize);
+        }
+        .ce-btn-maximize {
+            background: var(--ce-mac-maximize);
+        }
+    }
+
+    // Title text
+    .ce-header-title {
+        flex: 1;
+        text-align: center;
+        font-size: 12px;
+        color: var(--ce-header-fg);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        .ce-lang-icon {
+            font-size: 14px;
+            margin-right: 4px;
+        }
+    }
+
+    // Language badge (shown when title is present)
+    .ce-lang-badge {
+        font-size: 11px;
+        color: var(--ce-header-fg);
+        background: rgba(128, 128, 128, 0.15);
+        padding: 2px 8px;
+        border-radius: 4px;
+        white-space: nowrap;
+    }
+}
+
+// --------------------------------------------------------
+// Windows Style Decoration
+// --------------------------------------------------------
+[data-ce-window="windows"] .ce-header .ce-header-buttons {
+    // Windows-style: square minimize/maximize/close
+    .ce-btn {
+        width: auto;
+        height: auto;
+        border-radius: 0;
+        background: none !important;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        margin-left: 1px;
+        transition: background 0.15s;
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.08);
+        }
+    }
+
+    .ce-btn-close::after { content: "✕"; }
+    .ce-btn-minimize::after { content: "—"; font-weight: bold; }
+    .ce-btn-maximize::after { content: "□"; }
+}
+
+// --------------------------------------------------------
+// No Decoration Style
+// --------------------------------------------------------
+[data-ce-window="none"] .ce-header {
+    height: 24px;
+    background: transparent;
+    border-bottom: none;
+
+    .ce-header-buttons {
+        display: none;
+    }
+}
+
+// --------------------------------------------------------
+// Line Highlighting
+// --------------------------------------------------------
+.ce-line-highlight {
+    position: relative;
+    border-radius: 2px;
+    padding-left: 4px;
+    margin-left: -4px;
+    margin-right: -4px;
+    padding-right: 4px;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: rgba(255, 213, 79, 0.6);
+        border-radius: 2px;
+    }
+}
+
+// --------------------------------------------------------
+// Diff Markers
+// --------------------------------------------------------
+.ce-line-insert {
+    background: var(--ce-insert-bg) !important;
+    position: relative;
+
+    &::before {
+        content: "+";
+        position: absolute;
+        left: -16px;
+        color: #50c878;
+        font-weight: bold;
+        font-size: 12px;
+    }
+}
+
+.ce-line-delete {
+    background: var(--ce-delete-bg) !important;
+    position: relative;
+    opacity: 0.85;
+
+    &::before {
+        content: "-";
+        position: absolute;
+        left: -16px;
+        color: #e06c75;
+        font-weight: bold;
+        font-size: 12px;
+    }
+}
+
+// --------------------------------------------------------
+// Terminal Simulation
+// --------------------------------------------------------
+.ce-terminal .ce-header {
+    .ce-header-title {
+        &::before {
+            content: "Terminal";
+        }
+    }
+}
+
+.ce-terminal .hljs {
+    // Terminal prompt styling
+    &::before {
+        content: "$ ";
+        color: var(--ce-function, #61afef);
+        font-weight: bold;
+    }
+}
+
+// --------------------------------------------------------
+// Code Folding
+// --------------------------------------------------------
+.ce-folded .hljs,
+.ce-folded .protyle-code {
+    max-height: 150px;
+    overflow: hidden;
+    position: relative;
+
+    // Fade gradient at the bottom
+    &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: linear-gradient(transparent, var(--ce-bg, rgba(255, 255, 255, 0.8)));
+        pointer-events: none;
+    }
+}
+
+.ce-expanded .hljs,
+.ce-expanded .protyle-code {
+    max-height: none !important;
+    overflow: auto !important;
+
+    &::after {
+        display: none;
+    }
+}
+
+.ce-expand-btn {
+    text-align: center;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: var(--ce-header-fg, rgba(0, 0, 0, 0.5));
+    background: var(--ce-header-bg, rgba(0, 0, 0, 0.03));
+    cursor: pointer;
+    transition: background 0.15s;
+    border-top: 1px solid rgba(128, 128, 128, 0.1);
+    user-select: none;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.06);
+        color: rgba(0, 0, 0, 0.7);
+    }
+}
+
+// --------------------------------------------------------
+// Code Wrap
+// --------------------------------------------------------
+.ce-wrap .hljs,
+.ce-wrap .protyle-code {
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+// --------------------------------------------------------
+// Copy Button Enhancement
+// --------------------------------------------------------
+.code-block[data-ce-decorated] .protyle-action__copy {
+    // Make the copy button more visible and styled
+    opacity: 0.6;
+    transition: opacity 0.15s, transform 0.15s;
+
+    &:hover {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+// --------------------------------------------------------
+// Inline Code Enhancement
+// --------------------------------------------------------
+.ce-inline-code-highlight {
+    // Styles for inline code with syntax highlighting
+    code {
+        font-family: var(--ce-font);
+        font-size: 0.9em;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(128, 128, 128, 0.1);
+    }
+}
+
+// --------------------------------------------------------
+// Settings Panel Styles
+// --------------------------------------------------------
+.ce-settings {
+    max-width: 600px;
+    padding: 16px;
+
+    .ce-settings-section {
+        margin-bottom: 24px;
+        padding: 16px;
+        background: rgba(0, 0, 0, 0.02);
+        border-radius: 8px;
+
+        h3 {
+            margin: 0 0 12px 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+    }
+
+    .ce-select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid rgba(128, 128, 128, 0.2);
+        border-radius: 6px;
+        font-size: 14px;
+        background: white;
+        cursor: pointer;
+    }
+
+    .ce-input {
+        width: 80px;
+        padding: 6px 10px;
+        border: 1px solid rgba(128, 128, 128, 0.2);
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    .ce-range {
+        width: 200px;
+    }
+
+    .ce-setting-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+
+        label {
+            min-width: 120px;
+            font-size: 14px;
+        }
+
+        .ce-hint {
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.4);
+        }
+    }
+
+    .ce-radio-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .ce-toggle-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .ce-toggles {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-top: 12px;
+    }
+
+    .ce-theme-preview {
+        margin-top: 12px;
+    }
+
+    .ce-preview-block {
+        margin: 0 auto;
+        overflow: hidden;
+
+        .ce-preview-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+
+            .ce-btn {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                display: inline-block;
+            }
+        }
+
+        .ce-preview-code {
+            font-family: var(--ce-font);
+            line-height: var(--ce-line-height);
+        }
+    }
+
+    .ce-preview-default {
+        text-align: center;
+        padding: 20px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 14px;
+    }
+}
+
+// --------------------------------------------------------
+// Responsive Adjustments
+// --------------------------------------------------------
+@media (max-width: 768px) {
+    :root {
+        --ce-font-size: 12px;
+        --ce-header-height: 28px;
+        --ce-border-radius: 8px;
+    }
+
+    .ce-header {
+        padding: 0 8px;
+
+        .ce-header-buttons .ce-btn {
+            width: 10px;
+            height: 10px;
+        }
+
+        .ce-header-title {
+            font-size: 10px;
+        }
+    }
+}
+
+// --------------------------------------------------------
+// Print Mode — strip decorations for clean printing
+// --------------------------------------------------------
+@media print {
+    .ce-header,
+    .ce-expand-btn,
+    .ce-lang-badge {
+        display: none !important;
+    }
+
+    .code-block[data-ce-decorated] {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+}

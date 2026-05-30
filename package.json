@@ -1,0 +1,31 @@
+{
+  "name": "siyuan-code-enhancer",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Beautiful code blocks with themes, titles, line highlighting, diff markers, folding and more for SiYuan Note",
+  "repository": "https://github.com/songyaocode/siyuan-code-enhancer",
+  "homepage": "https://github.com/songyaocode/siyuan-code-enhancer",
+  "author": "songyaocode",
+  "license": "MIT",
+  "scripts": {
+    "dev": "webpack --mode development --watch",
+    "dev:app": "webpack --mode development --config webpack.app.config.js --watch",
+    "build": "webpack --mode production && webpack --mode production --config webpack.kernel.config.js && pnpm run build:copy",
+    "build:copy": "node scripts/build-copy.js",
+    "build:app": "webpack --mode production --config webpack.app.config.js"
+  },
+  "devDependencies": {
+    "siyuan": "^1.0.9",
+    "typescript": "^5.4.0",
+    "webpack": "^5.90.0",
+    "webpack-cli": "^5.1.0",
+    "css-loader": "^6.10.0",
+    "sass": "^1.71.0",
+    "sass-loader": "^14.1.0",
+    "mini-css-extract-plugin": "^2.8.0",
+    "css-minimizer-webpack-plugin": "^6.0.0",
+    "terser-webpack-plugin": "^5.3.0",
+    "ts-loader": "^9.5.0",
+    "dprint": "^0.45.0"
+  }
+}
